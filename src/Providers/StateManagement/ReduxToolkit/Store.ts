@@ -10,10 +10,11 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 // Slices
 import { ArticlesSlice } from "./Slices/ArticlesSlice/Articles.slice";
+import { AuthorsSlice } from "./Slices/AuthorsSlice/Authors.slice";
 // Slices
 
 export const Store = configureStore({
-  reducer: { Articles: ArticlesSlice.reducer },
+  reducer: { Articles: ArticlesSlice.reducer, Authors: AuthorsSlice.reducer },
 });
 
 export const useReduxDispatch: () => typeof Store.dispatch = useDispatch;

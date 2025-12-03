@@ -1,4 +1,4 @@
-interface Author {
+export interface Author {
   ORCID: string;
   "authenticated-orcid": boolean;
   given: string;
