@@ -2,7 +2,7 @@
 
 // Components
 import ReviewerPool from "./ReviewerPool/ReviewerPool";
-import Articles from "./ReviewerPool/Articles/Articles";
+import Articles from "./Articles/Articles";
 // Components
 
 // Providers
