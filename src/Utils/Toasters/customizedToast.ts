@@ -1,4 +1,6 @@
+// Toasters
 import { toast } from "react-toastify";
+// Toasters
 
 export const customizedToast = (
   msg: string,

@@ -1,14 +1,16 @@
+// Components
 import Divider from "@/Components/Common/Divider/Divider";
+// Components
+
+// Redux
 import { useReduxSelector } from "@/Providers/StateManagement/ReduxToolkit/Store";
-import React from "react";
+// Redux
 
 const Header = () => {
   const { data: articles } = useReduxSelector(
     (state) => state.Articles.allArticles
   );
-  const { data: authors } = useReduxSelector(
-    (state) => state.Authors.allAuthors
-  );
+
   const localAuthors = useReduxSelector((state) => state.Authors.localAuthors);
   return (
     <div
