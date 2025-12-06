@@ -17,9 +17,16 @@ import { useDebounce } from "@/Hooks/Optimization/useDebounce";
 // Components
 import Article from "./Article/Article";
 import PendingAndErrorManager from "@/Components/Common/PendingAndErrorManager/PendingAndErrorManager";
+import LocalArticle from "./LocalArticle/LocalArticle";
 // Components
 
-const Articles = () => {
+type T_ArticlesProps = {
+  justAssigned?: boolean;
+};
+
+const Articles: React.FunctionComponent<T_ArticlesProps> = ({
+  justAssigned,
+}) => {
   const dispatch = useReduxDispatch();
 
   const {
@@ -29,14 +36,21 @@ const Articles = () => {
     isError,
   } = useReduxSelector((state) => state.Articles.allArticles);
 
+  const localAuthors = useReduxSelector((state) => state.Authors.localAuthors);
+
   const getAllReviewers = useCallback(() => {
+    if (justAssigned) return;
     dispatch(getAsyncAllArticles());
-  }, [dispatch]);
+  }, [dispatch, justAssigned]);
 
   useDebounce(100, getAllReviewers);
 
   return (
-    <div className="w-1/3 p-4">
+    <div className="w-full col-span-1 ">
+      <h2 className="text-lg font-semibold mb-3">
+        {justAssigned ? "Assigned Articles" : "Unassigned Articles"}
+      </h2>
+
       <PendingAndErrorManager
         isDone={isDone}
         isError={isError}
@@ -44,9 +58,27 @@ const Articles = () => {
         onError={getAllReviewers}
         showAfterDone={
           <div className="space-y-3">
-            {articles.map((item, index) => (
-              <Article key={index} data={item} />
-            ))}
+            {justAssigned ? (
+              <>
+                {Object.keys(localAuthors).map((item, index) => (
+                  <LocalArticle
+                    key={`${item}${index}`}
+                    articles={localAuthors[item]}
+                    writerName={item}
+                  />
+                ))}
+              </>
+            ) : (
+              <>
+                {articles.map((item, index) => (
+                  <Article
+                    key={`${index}${item.DOI}${item.abstract}`}
+                    data={item}
+                    disableDND={false}
+                  />
+                ))}
+              </>
+            )}
           </div>
         }
       />

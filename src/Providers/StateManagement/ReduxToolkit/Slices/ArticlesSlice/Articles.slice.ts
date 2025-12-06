@@ -1,5 +1,5 @@
 // Redux
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Redux
 
 // Utils
@@ -61,7 +61,21 @@ export const getAsyncAllArticlesWithoutPending = createAsyncThunk(
 export const ArticlesSlice = createSlice({
   name: "Articles",
   initialState,
-  reducers: {},
+  reducers: {
+    removeSingleArticle: (state, action: PayloadAction<string>) => {
+      const article = JSON.parse(action.payload);
+      const desiredArticleIndex = state.allArticles.data.findIndex(
+        (item) => item.abstract === article.abstract
+      );
+      if (desiredArticleIndex === -1) {
+        return;
+      }
+
+      state.allArticles.data = state.allArticles.data.filter(
+        (_, index) => index !== desiredArticleIndex
+      );
+    },
+  },
   extraReducers: (builder) => {
     //
     //

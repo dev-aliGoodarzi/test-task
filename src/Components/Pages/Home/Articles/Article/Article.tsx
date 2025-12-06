@@ -6,28 +6,52 @@ import React from "react";
 // Models
 import { I_WorkArticle } from "@/Models/Work/Work.interfaces";
 import { useCustomDND } from "@/Providers/DND/Hooks/dnd.hook";
+import { useReduxDispatch } from "@/Providers/StateManagement/ReduxToolkit/Store";
+import { AuthorsSlice } from "@/Providers/StateManagement/ReduxToolkit/Slices/AuthorsSlice/Authors.slice";
+import { ArticlesSlice } from "@/Providers/StateManagement/ReduxToolkit/Slices/ArticlesSlice/Articles.slice";
 // Models
 
 type T_ArticleProps = {
   data: I_WorkArticle;
+  disableDND: boolean;
 };
 
-const Article: React.FunctionComponent<T_ArticleProps> = ({ data }) => {
+const Article: React.FunctionComponent<T_ArticleProps> = ({
+  data,
+  disableDND,
+}) => {
+  const dispatch = useReduxDispatch();
+
   const { drop } = useCustomDND({
-    onDrop: (d) => {
+    onDrop: (d: any) => {
       console.clear();
-      alert(`Element Dropped !\n\n\n ${JSON.stringify(d)}`);
+      console.log(d);
+      dispatch(
+        AuthorsSlice.actions.addArticleToSingleAuthor({
+          authorName: d.family,
+          article: data,
+          onDone: () => {
+            setTimeout(() => {
+              dispatch(
+                ArticlesSlice.actions.removeSingleArticle(JSON.stringify(data))
+              );
+            }, 100);
+            return "";
+          },
+        })
+      );
     },
   });
 
   return (
     <div
-      className="w-full max-w-sm bg-white rounded-2xl shadow-md p-5 space-y-3"
-      ref={(d) => drop.dropRef(d) as any}
+      className="w-full max-w-sm bg-white rounded-md shadow-md p-5 space-y-3"
+      ref={disableDND ? null : (d) => drop.dropRef(d) as any}
     >
-      <h2 className="text-lg font-semibold leading-tight">{data.title[0]}</h2>
-
-      <p className="text-sm text-gray-500">{data.abstract}</p>
+      <h2
+        className="text-lg font-semibold leading-tight"
+        dangerouslySetInnerHTML={{ __html: data.title[0] }}
+      ></h2>
 
       <div className="flex flex-wrap gap-2">
         {data?.title?.slice(1, 3).map((item, index) => (

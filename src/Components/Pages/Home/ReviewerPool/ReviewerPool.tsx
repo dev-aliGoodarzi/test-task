@@ -38,7 +38,7 @@ const ReviewerPool = () => {
   useDebounce(100, getAllReviewers);
 
   return (
-    <div className="w-1/3 p-4">
+    <div className="w-full col-span-1 ">
       <h2 className="text-lg font-semibold mb-3">Reviewers Pool</h2>
 
       {/* Controls */}
@@ -73,8 +73,11 @@ const ReviewerPool = () => {
               .filter((i) =>
                 i?.family?.toLowerCase()?.includes(query?.toLowerCase())
               )
-              .map((item) => (
-                <Reviewer key={item.ORCID} author={item} />
+              .map((item, index) => (
+                <Reviewer
+                  key={`${item.ORCID}${index}${item.family}`}
+                  author={item}
+                />
               ))}
           </div>
         }

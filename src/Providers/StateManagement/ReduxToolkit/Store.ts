@@ -15,6 +15,10 @@ import { AuthorsSlice } from "./Slices/AuthorsSlice/Authors.slice";
 
 export const Store = configureStore({
   reducer: { Articles: ArticlesSlice.reducer, Authors: AuthorsSlice.reducer },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export const useReduxDispatch: () => typeof Store.dispatch = useDispatch;
